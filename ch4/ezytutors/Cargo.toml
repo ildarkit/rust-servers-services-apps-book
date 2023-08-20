@@ -1,0 +1,2 @@
+[workspace]
+members = ["tutor-nodb", "tutor-db"]
