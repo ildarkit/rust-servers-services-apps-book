@@ -58,3 +58,63 @@ fn app_config(config: &mut web::ServiceConfig) {
                 .route(web::post().to(handle_post_tutor)))
     );
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actix_web::http::{header::{CONTENT_TYPE,
+        HeaderValue}, StatusCode};
+    use actix_web::web::Form;
+
+    #[actix_rt::test]
+    async fn handle_post_1_unit_test() {
+        let params = Form(Tutor{
+            name: "Terry".to_string(),
+        });
+        let tera = Tera::new(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/static/iter2/**/*"
+        ))
+        .unwrap();
+        let webdata_tera = web::Data::new(tera);
+        let resp = handle_post_tutor(
+            webdata_tera, params)
+            .await.unwrap();
+        assert_eq!(resp.status(), StatusCode::OK);
+        assert_eq!(
+            resp.headers().get(CONTENT_TYPE).unwrap(),
+            HeaderValue::from_static("text/html")
+        );
+    }
+
+    use actix_web::dev::{Service, ServiceResponse};
+    use actix_web::test::{self, TestRequest};
+
+    #[actix_rt::test]
+    async fn handle_post_1_integration_test() {
+        let tera = Tera::new(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/static/iter2/**/*"
+        ))
+        .unwrap();
+        let app = test::init_service(
+            App::new()
+                .app_data(web::Data::new(tera))
+                .configure(app_config)
+        )
+        .await;
+
+        let req = TestRequest::post()
+            .uri("/tutors")
+            .set_form(&Tutor{
+                name: "Terry".to_string(),
+            })
+            .to_request();
+        let resp: ServiceResponse = app.call(req).await.unwrap();
+        assert_eq!(resp.status(), StatusCode::OK);
+        assert_eq!(
+            resp.headers().get(CONTENT_TYPE).unwrap(),
+            HeaderValue::from_static("text/html")
+        );
+    }
+}
