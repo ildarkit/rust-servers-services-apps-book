@@ -19,6 +19,7 @@ mod state;
 mod errors;
 
 use routes::*;
+use errors::EzyTutorError;
 use state::AppState;
 
 #[actix_rt::main]
