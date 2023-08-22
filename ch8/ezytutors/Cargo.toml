@@ -1,0 +1,2 @@
+[workspace]
+members = ["tutor-web-service", "tutor-web-app-ssr"]
