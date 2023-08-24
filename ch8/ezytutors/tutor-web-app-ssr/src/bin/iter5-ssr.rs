@@ -1,6 +1,6 @@
 #[path = "../iter5/mod.rs"]
 mod iter5;
-use iter5::{dbaccess, errors, handler,
+use iter5::{errors, handler,
     model, routes, state::AppState};
 use routes::app_config;
 use actix_web::{web, App, HttpServer};
