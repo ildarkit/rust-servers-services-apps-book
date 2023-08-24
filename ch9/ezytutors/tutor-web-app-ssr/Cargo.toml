@@ -1,0 +1,20 @@
+[package]
+name = "tutor-web-app-ssr"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-files = "0.6.2"
+actix-web = "4.3.1"
+awc = "3.1.1"
+dotenv = "0.15.0"
+rust-argon2 = "2.0.0"
+serde = { version = "1.0.185", features = ["derive"] }
+serde_json = "1.0.105"
+sqlx = { version = "0.7.1", default-features = false, features = ["postgres", "runtime-tokio-native-tls", "macros", "chrono"] }
+tera = "1.19.0"
+
+[dev-dependencies]
+actix-rt = "2.8.0"
