@@ -12,7 +12,7 @@
     </div>
     <div class="center">
       <h2>Tutor registaration</h2>
-      <form action="/register" mothod=POST>
+      <form action="/register" method="post">
         <label for="userid">Enter username</label><br>
         <input type="text" name="username" value="{{current_username}}" 
           autocomplete="username" minlength="6" maxlength="12" required><br>
@@ -42,7 +42,7 @@
         <br>
         <button type=submit id="button1">Register</button>
       </form>
-      <form action=/signinhome method=GET>
+      <form action="/signinhome" method="get">
         <button type=submit id="button2">Sign in</button>
       </form>
     </div>
