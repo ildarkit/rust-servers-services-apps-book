@@ -1,10 +1,11 @@
 use argon2::{self, Config};
 use actix_web::{web, Error, HttpResponse, Result};
 use serde_json::json;
-use crate::model::*;
-use crate::iter5::state::AppState;
-use crate::iter5::errors::EzyTutorError;
-use crate::iter5::dbaccess::{get_user_record, post_new_user};
+use crate::model::{TutorRegisterForm, TutorResponse,
+    TutorSigninForm, User};
+use crate::iter6::state::AppState;
+use crate::iter6::errors::EzyTutorError;
+use crate::iter6::dbaccess::{get_user_record, post_new_user};
 
 pub async fn show_register_form(tmpl: web::Data<tera::Tera>)
     -> Result<HttpResponse, Error> {
@@ -85,6 +86,63 @@ pub async fn handle_register(
         s = tmpl.render("register.html", &ctx)
             .map_err(|_| EzyTutorError::TeraError(
                 "Template error".to_string()))?;
+    }
+    Ok(HttpResponse::Ok().content_type("text/html").body(s))
+}
+
+pub async fn show_signin_form(tmpl: web::Data<tera::Tera>)
+    -> Result<HttpResponse, Error> {
+    let mut ctx = tera::Context::new();
+    ctx.insert("error", "");
+    ctx.insert("current_name", "");
+    ctx.insert("current_password", "");
+    let s = tmpl.render("signin.html", &ctx)
+        .map_err(|_| EzyTutorError::TeraError(
+            "Template error".to_string()))?;
+    Ok(HttpResponse::Ok().content_type("text/html").body(s))
+}
+
+pub async fn handle_signin(
+    tmpl: web::Data<tera::Tera>,
+    app_state: web::Data<AppState>,
+    params: web::Form<TutorSigninForm>,
+) -> Result<HttpResponse, Error> {
+    let mut ctx = tera::Context::new();
+    let s;
+    let username = params.username.clone();
+    let user = get_user_record(
+        &app_state.db,
+        username.to_string())
+        .await;
+    if let Ok(user) = user {
+        let does_password_match = argon2::verify_encoded(
+            &user.user_password.trim(),
+            params.password.clone().as_bytes(),
+        )
+        .unwrap();
+        if !does_password_match {
+            ctx.insert("error", "Invalid login");
+            ctx.insert("current_name", &params.username);
+            ctx.insert("current_password", &params.password);
+            s = tmpl.render("signin.html", &ctx)
+                .map_err(|_| EzyTutorError::TeraError(
+                    "Template error".to_string()))?;
+        } else {
+            ctx.insert("name", &params.username);
+            ctx.insert("title", &"Signin confirmation!".to_owned());
+            ctx.insert(
+                "message",
+                &"You have successfully logged in to EzyTutor".to_owned()
+            );
+            s = tmpl.render("user.html", &ctx)
+                .map_err(|_| EzyTutorError::TeraError("Template error".to_string()))?;
+        }
+    } else {
+        ctx.insert("error", "User id not found");
+        ctx.insert("current_name", &params.username);
+        ctx.insert("current_password", &params.password);
+        s = tmpl.render("signin.html", &ctx)
+            .map_err(|_| EzyTutorError::TeraError("Template error".to_string()))?;
     }
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }

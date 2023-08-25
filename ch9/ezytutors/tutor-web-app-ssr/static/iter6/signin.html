@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tutor registration</title>
+    <style>
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Welcome to EzyTutor</h1>
+      <p>Start your own online tutor business in a few minutes</p>
+    </div>
+    <div class="center">
+      <h2>Tutor sign in</h2>
+      <form action="/signin" method="post">
+        <label for="userid">Enter username</label><br>
+        <input type="text" name="username" autocomplete="username" value="{{current_name}}" minlength="6" maxlength="12" required><br>
+        <label for="password">Enter password</label><br>
+        <input type="password" name="password" autocomplete="new-password" value="{{current_password}}" minlength="8" maxlength="12" required><br>
+        <label for="error">
+          <p style="color:red">{{error}}</p>
+        </label><br>
+        <button type="submit" id="button1">Sing in</button>
+      </form>
+      <form action="/" method="get">
+        <button type="submit" id="button2">Register</button>
+      </form>
+    </div>
+    <p>
+      <div id="footer">
+        (c)Photo by Author
+      </div>
+    </p>
+  </body>
+</html>
