@@ -2,7 +2,7 @@
 mod iter6;
 use iter6::{errors, handler,
     model, routes, state::AppState};
-use routes::app_config;
+use routes::{app_config, course_config};
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 use std::env;
@@ -26,6 +26,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(web::Data::new(tera))
             .app_data(shared_data.clone())
+            .configure(course_config)
             .configure(app_config)
     })
     .bind(&host_port)?
