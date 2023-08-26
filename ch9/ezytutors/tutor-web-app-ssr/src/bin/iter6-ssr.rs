@@ -1,7 +1,7 @@
 #[path = "../iter6/mod.rs"]
 mod iter6;
 use iter6::{errors, handler,
-    model, routes, state::AppState};
+    model, routes, state};
 use routes::{app_config, course_config};
 use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
@@ -18,7 +18,7 @@ async fn main() -> std::io::Result<()> {
     let database_url = env::var("DATABASE_URL").expect(
         "DATAbASE_URL is not set in .env file");
     let db_pool = PgPool::connect(&database_url).await.unwrap();
-    let shared_data = web::Data::new(AppState{db: db_pool});
+    let shared_data = web::Data::new(state::AppState{db: db_pool});
 
     HttpServer::new(move || {
         let tera = Tera::new(concat!(env!("CARGO_MANIFEST_DIR"),

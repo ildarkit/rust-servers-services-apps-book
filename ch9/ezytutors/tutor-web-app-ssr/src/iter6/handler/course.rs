@@ -1,5 +1,5 @@
 use actix_web::{web, Error, HttpResponse, Result};
-use crate::iter6::state::AppState;
+use crate::state::AppState;
 use crate::model::{NewCourse, NewCourseResponse, UpdateCourse,
     UpdateCourseResponse};
 use serde_json::json;
