@@ -71,7 +71,12 @@ pub async fn handle_update_course(
 pub async fn handle_delete_course(
     _tmpl: web::Data<tera::Tera>,
     _app_state: web::Data<AppState>,
+    path: web::Path<(i32, i32)>,
 ) -> Result<HttpResponse, Error> {
-    println!("Got delete request");
-    Ok(HttpResponse::Ok().body("Got delete request"))
+    let (tutor_id, course_id) = path.into_inner();
+    let awc_client = awc::Client::default();
+    let delete_url = format!("http://localhost:3000/courses/{}/{}",
+        tutor_id, course_id);
+    let _res = awc_client.delete(delete_url).send().await.unwrap();
+    Ok(HttpResponse::Ok().body("Course deleted"))
 }
