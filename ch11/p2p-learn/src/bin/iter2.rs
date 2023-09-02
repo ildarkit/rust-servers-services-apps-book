@@ -10,8 +10,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let new_peer_id = PeerId::from(new_key.public());
     println!("Local peer id: {:?}", new_peer_id);
     let behaviour = Behaviour;
-    let transport = libp2p::development_transport(new_key).await?;
-    let mut swarm = SwarmBuilder::with_async_std_executor(
+    let transport = libp2p::tokio_development_transport(new_key)?;
+    let mut swarm = SwarmBuilder::with_tokio_executor(
         transport, behaviour, new_peer_id).build();
     swarm.listen_on("/ip4/0.0.0.0/tcp/0".parse()?)?;
 
