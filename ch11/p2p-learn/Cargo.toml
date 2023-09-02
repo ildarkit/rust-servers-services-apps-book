@@ -1,0 +1,10 @@
+[package]
+name = "p2p-learn"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libp2p = { version = "0.52.3", features = ["tcp", "dns", "async-std", "noise", "yamux", "websocket", "ping", "macros"] }
+tokio = { version = "1.32.0", features = ["full"] }
